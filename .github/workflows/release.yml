@@ -19,18 +19,21 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Compile extension
-        run: npm run package
+      - name: Validate extension
+        run: npm test
 
-      - name: Install vsce
-        run: npm install -g vsce
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Test PDF viewer
+        run: npm run test:browser
 
       - name: Package VSIX
-        run: vsce package
+        run: npm run vsix
 
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
-          files: vscode-tikz-preview-*.vsix
+          files: artifacts/*.vsix

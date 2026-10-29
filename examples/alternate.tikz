@@ -1,0 +1,5 @@
+\begin{tikzpicture}[node distance=3cm]
+  \node[draw,circle,fill=orange!12] (a) {A};
+  \node[draw,circle,fill=purple!10,right of=a] (b) {B};
+  \draw[->,thick] (a) -- node[above] {switch file} (b);
+\end{tikzpicture}

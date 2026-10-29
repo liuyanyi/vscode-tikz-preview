@@ -1,5 +1,25 @@
 # TikZ Preview
 
+This is the **community build** maintained at
+[liuyanyi/vscode-tikz-preview](https://github.com/liuyanyi/vscode-tikz-preview),
+forked from [wangjiezhe/vscode-tikz-preview](https://github.com/wangjiezhe/vscode-tikz-preview).
+It includes PDF rendering race fixes and compilation/rendering loading states.
+The original author and MIT license are retained.
+
+## Install the community VSIX
+
+Build with `npm ci` and `npm run vsix`, then use **Extensions: Install from VSIX**
+to install `artifacts/tikz-preview-community-0.3.3.vsix`.
+Its extension ID is `liuyanyi.vscode-tikz-preview`. This is a local VSIX build;
+Marketplace publication and publisher registration are separate steps.
+
+Disable the original `wangjiezhe.vscode-tikz-preview` extension before enabling
+this build: both expose the same command and settings for configuration
+compatibility. Existing `tikz-preview.*` settings continue to work. Run
+**Developer: Reload Window** after changing which build is enabled.
+
+For upstream contribution branches and PR text, see [docs/upstream/README.md](docs/upstream/README.md).
+
 Live preview for TikZ files in VS Code — like KtikZ, but inside your editor. Supports both **PDF** and **SVG** preview modes.
 
 [中文说明](README.zh-CN.md)

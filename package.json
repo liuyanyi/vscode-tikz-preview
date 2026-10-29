@@ -1,10 +1,10 @@
 {
   "name": "vscode-tikz-preview",
-  "displayName": "TikZ Preview",
-  "description": "Preview tikz lively like KtikZ",
-  "version": "0.3.2",
+  "displayName": "TikZ Preview (Community)",
+  "description": "Community build of TikZ Preview with stable PDF rendering and compilation status",
+  "version": "0.3.3",
   "license": "MIT",
-  "publisher": "wangjiezhe",
+  "publisher": "liuyanyi",
   "l10n": "./l10n",
   "author": {
     "name": "Jiezhe Wang"
@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wangjiezhe/vscode-tikz-preview"
+    "url": "https://github.com/liuyanyi/vscode-tikz-preview"
   },
   "bugs": {
-    "url": "https://github.com/wangjiezhe/vscode-tikz-preview/issues"
+    "url": "https://github.com/liuyanyi/vscode-tikz-preview/issues"
   },
-  "homepage": "https://github.com/wangjiezhe/vscode-tikz-preview#readme",
+  "homepage": "https://github.com/liuyanyi/vscode-tikz-preview#readme",
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": false
@@ -141,12 +141,14 @@
     "lint": "eslint src",
     "copy-pdfjs": "node scripts/copy-pdfjs.js",
     "test": "npm run package && node --test",
-    "test:browser": "npm run package && playwright test"
+    "test:browser": "npm run package && playwright test",
+    "vsix": "vsce package --out artifacts/tikz-preview-community-0.3.3.vsix"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
     "@types/node": "22.x",
     "@types/vscode": "^1.120.0",
+    "@vscode/vsce": "^4.1.0",
     "esbuild": "^0.27.3",
     "eslint": "^9.39.3",
     "npm-run-all": "^4.1.5",
@@ -155,5 +157,12 @@
   },
   "dependencies": {
     "pdfjs-dist": "^5.7.284"
-  }
+  },
+  "preview": true,
+  "contributors": [
+    {
+      "name": "liuyanyi",
+      "url": "https://github.com/liuyanyi"
+    }
+  ]
 }

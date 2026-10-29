@@ -1,5 +1,11 @@
 # TikZ Preview
 
+这是基于 [wangjiezhe/vscode-tikz-preview](https://github.com/wangjiezhe/vscode-tikz-preview) 的社区构建，源码位于 [liuyanyi/vscode-tikz-preview](https://github.com/liuyanyi/vscode-tikz-preview)，保留原作者与 MIT 许可。
+
+运行 `npm ci`、`npm run vsix` 后，通过 **Extensions: Install from VSIX** 安装 `artifacts/tikz-preview-community-0.3.3.vsix`。社区构建标识为 `liuyanyi.vscode-tikz-preview`，目前提供 VSIX，不代表已经上架 Marketplace 或注册发布者。
+
+启用社区构建前，请禁用原插件 `wangjiezhe.vscode-tikz-preview`。两者沿用相同命令和设置以兼容已有配置，不能同时启用。切换后执行 **Developer: Reload Window**；现有 `tikz-preview.*` 设置可继续使用。
+
 切换图源或重新编译时会显示当前文件名和加载提示，区分编译与预览渲染阶段；新图完整绘制后再显示，过期结果不会覆盖当前文件。
 
 开发验证：使用 Node.js 22 或更新版本，运行 `npm ci`、`npm test`。浏览器回归测试先运行 `npx playwright install chromium`，再运行 `npm run test:browser`；测试使用公开生成的 PDF 示例，不依赖本机 TeX、已安装插件或个人文件。

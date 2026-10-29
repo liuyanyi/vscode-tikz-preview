@@ -1,0 +1,5 @@
+\begin{tikzpicture}[node distance=3cm]
+  \node[draw,rounded corners,fill=blue!8] (input) {Input};
+  \node[draw,rounded corners,fill=green!8,right of=input] (output) {Output};
+  \draw[->,thick] (input) -- (output);
+\end{tikzpicture}
