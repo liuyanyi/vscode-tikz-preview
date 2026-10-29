@@ -5,6 +5,7 @@
   "version": "0.3.2",
   "license": "MIT",
   "publisher": "wangjiezhe",
+  "l10n": "./l10n",
   "author": {
     "name": "Jiezhe Wang"
   },
@@ -139,9 +140,11 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "copy-pdfjs": "node scripts/copy-pdfjs.js",
-    "test": "npm run package && node --test"
+    "test": "npm run package && node --test",
+    "test:browser": "npm run package && playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/node": "22.x",
     "@types/vscode": "^1.120.0",
     "esbuild": "^0.27.3",

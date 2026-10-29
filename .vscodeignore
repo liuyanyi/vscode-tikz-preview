@@ -22,3 +22,5 @@ tests/**
 test-results/**
 playwright-report/**
 artifacts/**
+playwright.config.cjs
+package-lock.json

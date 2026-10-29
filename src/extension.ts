@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Compiler } from './compiler';
+import { Compiler, type CompileResult } from './compiler';
 import { PreviewManager } from './preview';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -81,14 +81,25 @@ export function activate(context: vscode.ExtensionContext) {
         const config = getConfig();
         const text = editor.document.getText();
         const baseName = path.basename(editor.document.fileName, path.extname(editor.document.fileName));
-        const result = await compiler.compile(
-            text,
-            config.templatePath,
-            config.placeholder,
-            config.latexCommand,
-            config.shellEscape,
-            baseName
-        );
+        if (config.previewMode === 'pdf') {
+            preview.showLoading(path.basename(editor.document.fileName));
+        }
+        let result: CompileResult;
+        try {
+            result = await compiler.compile(
+                text,
+                config.templatePath,
+                config.placeholder,
+                config.latexCommand,
+                config.shellEscape,
+                baseName
+            );
+        } catch (error) {
+            if (sequence === compileSequence) {
+                preview.showError(error instanceof Error ? error.message : String(error));
+            }
+            return;
+        }
 
         if (sequence !== compileSequence) {
             return;

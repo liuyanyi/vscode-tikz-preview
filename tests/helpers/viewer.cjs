@@ -9,9 +9,9 @@ function deferred() {
     return {promise, resolve, reject};
 }
 
-function fixture() {
+function fixture({strings} = {}) {
     const elements = new Map(), listeners = {}, timers = new Map();
-    const loads = [], renders = [], publications = [], unsafeResizes = [];
+    const loads = [], renders = [], publications = [], unsafeResizes = [], outgoing = [];
     let timerId = 0;
     function element(id) {
         const classes = new Set();
@@ -44,7 +44,8 @@ function fixture() {
         return node;
     }
     for (const id of ['canvas', 'viewport', 'error', 'zoomLevel', 'pageInfo',
-        'prevPage', 'nextPage', 'zoomIn', 'zoomOut', 'fitWidth']) elements.set(id, element(id));
+        'prevPage', 'nextPage', 'zoomIn', 'zoomOut', 'fitWidth', 'loading',
+        'loadingText', 'loadingFile']) elements.set(id, element(id));
     elements.get('error').classList.add('hidden');
     function makePdf(name, {numPages = 1, pageDelay = null} = {}) {
         return {
@@ -72,6 +73,8 @@ function fixture() {
         };
     }
     const context = {
+        PREVIEW_STRINGS: strings,
+        acquireVsCodeApi: () => ({postMessage: message => outgoing.push(message)}),
         pdfjsLib: {GlobalWorkerOptions: {}, getDocument({url}) {
             const pending = deferred();
             const task = {...pending, url, destroyed: false,
@@ -86,10 +89,11 @@ function fixture() {
     };
     vm.runInNewContext(source, context);
     const api = {
-        elements, loads, renders, publications, unsafeResizes, context, makePdf,
+        elements, loads, renders, publications, unsafeResizes, outgoing, context, makePdf,
         message(data) { listeners.message({data}); },
         resize(width) {
             elements.get('viewport').clientWidth = width;
+            elements.get('loading').clientWidth = width;
             listeners.resize();
         },
         tick() { const callbacks = [...timers.values()]; timers.clear(); callbacks.forEach(fn => fn()); },

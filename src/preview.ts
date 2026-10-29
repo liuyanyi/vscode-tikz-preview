@@ -1,8 +1,14 @@
 import * as vscode from 'vscode';
 
+type PreviewState =
+    | { type: 'loading'; fileName: string }
+    | { type: 'render'; pdfPath: string }
+    | { type: 'error'; message: string };
+
 export class PreviewManager {
     private panel: vscode.WebviewPanel | null = null;
     private outputChannel: vscode.OutputChannel;
+    private lastState: PreviewState | null = null;
 
     constructor(private extensionUri: vscode.Uri) {
         this.outputChannel = vscode.window.createOutputChannel('TikZ Preview');
@@ -31,6 +37,12 @@ export class PreviewManager {
 
         this.panel.onDidDispose(() => {
             this.panel = null;
+            this.lastState = null;
+        });
+        this.panel.webview.onDidReceiveMessage(message => {
+            if (message?.type === 'ready' && this.lastState) {
+                void this.panel?.webview.postMessage(this.lastState);
+            }
         });
 
         this.panel.webview.html = this.buildHtml();
@@ -40,21 +52,32 @@ export class PreviewManager {
         return this.panel !== null;
     }
 
+    private postState(state: PreviewState): void {
+        this.lastState = state;
+        void this.panel?.webview.postMessage(state);
+    }
+
+    showLoading(fileName: string): void {
+        this.postState({ type: 'loading', fileName });
+    }
+
     render(pdfPath: string): void {
         if (!this.panel) { return; }
         const uri = this.panel.webview.asWebviewUri(vscode.Uri.file(pdfPath));
-        this.panel.webview.postMessage({ type: 'render', pdfPath: uri.toString() });
+        this.postState({ type: 'render', pdfPath: uri.toString() });
     }
 
     showError(message: string): void {
         this.outputChannel.clear();
         this.outputChannel.appendLine(message);
-        if (this.panel) {
-            this.panel.webview.postMessage({ type: 'error', message });
-        }
+        this.postState({ type: 'error', message });
     }
 
     private buildHtml(): string {
+        const strings = JSON.stringify({
+            compiling: vscode.l10n.t('Compiling…'),
+            rendering: vscode.l10n.t('Rendering preview…'),
+        }).replace(/</g, '\\u003c');
         const pdfjsUri = this.panel!.webview.asWebviewUri(
             vscode.Uri.joinPath(this.extensionUri, 'media', 'pdf.min.js')
         );
@@ -82,6 +105,11 @@ body { background: #1e1e1e; color: #ccc; font-family: -apple-system, BlinkMacSys
 .viewport { flex: 1; overflow: auto; display: flex; justify-content: center; padding: 16px; }
 canvas { box-shadow: 0 0 10px rgba(0,0,0,.5); flex-shrink: 0; }
 .error { color: #f48771; padding: 16px; white-space: pre-wrap; font-family: monospace; font-size: 12px; flex: 1; overflow: auto; }
+.loading { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; min-height: 160px; color: var(--vscode-foreground, #ccc); }
+.loading-spinner { width: 28px; height: 28px; border: 3px solid var(--vscode-widget-border, #454545); border-top-color: var(--vscode-progressBar-background, #75beff); border-radius: 50%; animation: preview-spin .8s linear infinite; }
+.loading-file { color: var(--vscode-descriptionForeground, #aaa); font-family: monospace; font-size: 12px; max-width: 100%; overflow-wrap: anywhere; text-align: center; }
+@keyframes preview-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .loading-spinner { animation-duration: 2s; } }
 .hidden { display: none !important; }
 </style>
 </head>
@@ -95,12 +123,17 @@ canvas { box-shadow: 0 0 10px rgba(0,0,0,.5); flex-shrink: 0; }
   <button id="prevPage" class="hidden">◀</button>
   <button id="nextPage" class="hidden">▶</button>
 </div>
-<div class="viewport" id="viewport">
+<div class="loading" id="loading" role="status" aria-live="polite">
+  <div class="loading-spinner" aria-hidden="true"></div>
+  <div id="loadingText">Compiling…</div>
+  <div class="loading-file" id="loadingFile"></div>
+</div>
+<div class="viewport hidden" id="viewport">
   <canvas id="canvas"></canvas>
 </div>
 <div id="error" class="error hidden"></div>
 <script type="module" src="${pdfjsUri.toString()}"></script>
-<script>globalThis.WORKER_SRC_PLACEHOLDER = '${workerUri.toString()}';</script>
+<script>globalThis.WORKER_SRC_PLACEHOLDER = '${workerUri.toString()}'; globalThis.PREVIEW_STRINGS = ${strings};</script>
 <script type="module" src="${viewerJsUri.toString()}"></script>
 </body>
 </html>`;

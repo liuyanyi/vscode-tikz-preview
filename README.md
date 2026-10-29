@@ -13,6 +13,7 @@ Edit `.tikz`, `.pgf`, or `.tkz` files and see the compiled PDF update in a side 
 - **Template system** — use custom `.pgs` template files, or the bundled default (from KtikZ's `template_example.pgs`)
 - **Zoom controls** — zoom in/out, fit-to-width, or type a percentage manually
 - **Error display** — compilation errors shown inline in the preview panel
+- **Loading status** — shows the selected file while compiling and rendering, with stale results discarded
 - **SVG preview** — optional SVG mode via `jock.svg` extension (pdftocairo/pdf2svg conversion)
 - **Dark theme** — preview panel matches VS Code's dark interface
 
@@ -87,6 +88,16 @@ Templates use a placeholder (default `<>`) that is replaced with your document c
 ## Known Issues
 
 - PDF.js runs in main-thread mode to avoid CSP restrictions with web workers
+
+## Development and tests
+
+Use Node.js 22 or newer. `npm ci` installs the locked dependencies and `npm test`
+runs type checking, linting, the production build, and deterministic viewer/host tests.
+
+For real PDF.js rendering in Chromium, run `npx playwright install chromium`, then
+`npm run test:browser`. These tests generate public PDF fixtures, check the loading
+states, and compare final pixels after resize, zoom, hidden-panel and file-switch
+stress. They require no TeX installation or local extension installation.
 
 ## Release Notes
 

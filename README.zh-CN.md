@@ -1,5 +1,9 @@
 # TikZ Preview
 
+切换图源或重新编译时会显示当前文件名和加载提示，区分编译与预览渲染阶段；新图完整绘制后再显示，过期结果不会覆盖当前文件。
+
+开发验证：使用 Node.js 22 或更新版本，运行 `npm ci`、`npm test`。浏览器回归测试先运行 `npx playwright install chromium`，再运行 `npm run test:browser`；测试使用公开生成的 PDF 示例，不依赖本机 TeX、已安装插件或个人文件。
+
 在 VS Code 中实时预览 TikZ 文件 — 类似 KtikZ，但集成在编辑器内。同时支持 **PDF** 和 **SVG** 两种预览模式。
 
 编辑 `.tikz`、`.pgf` 或 `.tkz` 文件，在侧边面板中查看编译后的 PDF。

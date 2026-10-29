@@ -2,6 +2,9 @@
     'use strict';
     pdfjsLib.GlobalWorkerOptions.workerSrc = globalThis.WORKER_SRC_PLACEHOLDER;
 
+    var strings = Object.assign({compiling: 'Compiling…', rendering: 'Rendering preview…'},
+        globalThis.PREVIEW_STRINGS || {});
+
     var pdfDoc = null;
     var loadingTask = null;
     var renderTask = null;
@@ -19,6 +22,29 @@
     var pageInfo = document.getElementById('pageInfo');
     var prevBtn = document.getElementById('prevPage');
     var nextBtn = document.getElementById('nextPage');
+    var loadingEl = document.getElementById('loading');
+    var loadingText = document.getElementById('loadingText');
+    var loadingFile = document.getElementById('loadingFile');
+    var controls = [zoomLevel, prevBtn, nextBtn, document.getElementById('zoomIn'),
+        document.getElementById('zoomOut'), document.getElementById('fitWidth')];
+
+    function showLoading(message, fileName) {
+        loadingText.textContent = message;
+        if (fileName !== undefined) { loadingFile.textContent = fileName; }
+        errorDiv.classList.add('hidden');
+        viewportEl.classList.add('hidden');
+        loadingEl.classList.remove('hidden');
+        controls.forEach(function (control) { control.disabled = true; });
+    }
+
+    function hideLoading() {
+        loadingEl.classList.add('hidden');
+        controls.forEach(function (control) { control.disabled = false; });
+    }
+
+    function availableWidth() {
+        return loadingEl.classList.contains('hidden') ? viewportEl.clientWidth : loadingEl.clientWidth;
+    }
 
     function cancelRender() {
         ++renderRevision;
@@ -29,6 +55,7 @@
     }
 
     function showError(message) {
+        hideLoading();
         errorDiv.textContent = message;
         errorDiv.classList.remove('hidden');
         viewportEl.classList.add('hidden');
@@ -53,7 +80,7 @@
             if (revision !== renderRevision || doc !== pdfDoc) { return; }
             if (fitWidth) {
                 // Hidden webviews can report zero width. Keep the last good image.
-                var width = viewportEl.clientWidth;
+                var width = availableWidth();
                 if (width <= 32) { return; }
                 var baseViewport = page.getViewport({ scale: 1 });
                 currentScale = width * 0.9 / baseViewport.width;
@@ -81,6 +108,7 @@
             canvas = nextCanvas;
             currentPage = num;
             updateUI();
+            hideLoading();
             errorDiv.classList.add('hidden');
             viewportEl.classList.remove('hidden');
         } catch (err) {
@@ -107,8 +135,7 @@
     async function loadDocument(pdfPath) {
         var revision = ++loadRevision;
         releaseDocument();
-        errorDiv.classList.add('hidden');
-        viewportEl.classList.remove('hidden');
+        showLoading(strings.rendering);
         try {
             var task = pdfjsLib.getDocument({ url: pdfPath, disableWorker: true });
             loadingTask = task;
@@ -167,7 +194,11 @@
     window.addEventListener('message', function (event) {
         var msg = event.data;
         if (!msg) { return; }
-        if (msg.type === 'render') {
+        if (msg.type === 'loading') {
+            ++loadRevision;
+            releaseDocument();
+            showLoading(strings.compiling, msg.fileName);
+        } else if (msg.type === 'render') {
             loadDocument(msg.pdfPath);
         } else if (msg.type === 'error') {
             ++loadRevision;
@@ -180,8 +211,11 @@
         if (resizeTimer !== null) { clearTimeout(resizeTimer); }
         resizeTimer = setTimeout(function () {
             resizeTimer = null;
-            if (fitWidth && viewportEl.clientWidth > 32) { renderPage(currentPage); }
+            if (fitWidth && availableWidth() > 32) { renderPage(currentPage); }
         }, 120);
     });
 
+    if (typeof acquireVsCodeApi === 'function') {
+        acquireVsCodeApi().postMessage({type: 'ready'});
+    }
 })();
