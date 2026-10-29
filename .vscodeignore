@@ -17,3 +17,8 @@ vsc-extension-quickstart.md
 **/.vscode-test.*
 scripts/**
 screenshots/**
+
+tests/**
+test-results/**
+playwright-report/**
+artifacts/**

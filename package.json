@@ -101,18 +101,28 @@
           "items": {
             "type": "string"
           },
-          "default": [".tikz", ".pgf", ".tkz"],
+          "default": [
+            ".tikz",
+            ".pgf",
+            ".tkz"
+          ],
           "description": "File extensions that trigger automatic preview."
         },
         "tikz-preview.previewMode": {
           "type": "string",
-          "enum": ["pdf", "svg"],
+          "enum": [
+            "pdf",
+            "svg"
+          ],
           "default": "pdf",
           "description": "Preview mode: 'pdf' uses the built-in PDF.js viewer, 'svg' converts via pdftocairo/pdf2svg and opens in the jock.svg extension."
         },
         "tikz-preview.svgConverter": {
           "type": "string",
-          "enum": ["pdftocairo", "pdf2svg"],
+          "enum": [
+            "pdftocairo",
+            "pdf2svg"
+          ],
           "default": "pdftocairo",
           "description": "PDF-to-SVG converter command used when previewMode is 'svg'."
         }
@@ -128,7 +138,8 @@
     "package": "npm run check-types && npm run lint && node esbuild.js --production && npm run copy-pdfjs",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "copy-pdfjs": "node scripts/copy-pdfjs.js"
+    "copy-pdfjs": "node scripts/copy-pdfjs.js",
+    "test": "npm run package && node --test"
   },
   "devDependencies": {
     "@types/node": "22.x",
