@@ -1,0 +1,52 @@
+{
+  "refs": {
+    "before": "08d06184b74e3580cd9237e8172eeac90a3b99b4",
+    "after": "codex/fix-preview-render-races"
+  },
+  "pdfjs": "5.7.284",
+  "browser": "156.0.8078.4",
+  "fixedMatchesBaseline": true,
+  "originalDiffersFromBaseline": true,
+  "results": {
+    "before": {
+      "hash": "bda48438c0a9366d4d5bf7151a2978575b1863af4a35824ed878b68df7bae8cf",
+      "errors": [
+        "Cannot use the same canvas during multiple render() operations. Use different canvas or ensure previous operations were cancelled or completed."
+      ],
+      "tasks": [
+        {
+          "done": true,
+          "cancelled": false
+        },
+        {
+          "done": true,
+          "cancelled": false
+        }
+      ]
+    },
+    "after": {
+      "hash": "fc8059d0d2672716cb18f53ef3cc3f1a4135ca0de3d14e0a957ef5e9e7933a37",
+      "errors": [],
+      "tasks": [
+        {
+          "done": true,
+          "cancelled": true
+        },
+        {
+          "done": true,
+          "cancelled": false
+        }
+      ]
+    },
+    "baseline": {
+      "hash": "fc8059d0d2672716cb18f53ef3cc3f1a4135ca0de3d14e0a957ef5e9e7933a37",
+      "errors": [],
+      "tasks": [
+        {
+          "done": true,
+          "cancelled": false
+        }
+      ]
+    }
+  }
+}

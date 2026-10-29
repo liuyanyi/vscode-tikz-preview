@@ -1,0 +1,42 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 640 360] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 605 >>
+stream
+0.96 0.97 1 rg 0 0 640 360 re f
+0.1 0.15 0.25 rg BT /F1 26 Tf 28 312 Td (TikZ Preview - render race) Tj ET
+0.12 0.42 0.75 rg 28 140 170 110 re f
+0.25 0.60 0.36 rg 235 140 170 110 re f
+0.78 0.36 0.12 rg 442 140 170 110 re f
+1 1 1 rg BT /F1 22 Tf 68 190 Td (INPUT) Tj ET
+1 1 1 rg BT /F1 22 Tf 264 190 Td (RENDER) Tj ET
+1 1 1 rg BT /F1 22 Tf 472 190 Td (OUTPUT) Tj ET
+0.15 0.20 0.30 RG 3 w 198 195 m 235 195 l S 405 195 m 442 195 l S
+0.1 0.15 0.25 rg BT /F1 19 Tf 28 78 Td (Resize the panel while PDF.js is drawing.) Tj ET
+BT /F1 17 Tf 28 44 Td (The final image should keep its scale and orientation.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000896 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+966
+%%EOF
