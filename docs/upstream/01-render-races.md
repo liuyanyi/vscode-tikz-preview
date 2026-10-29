@@ -48,3 +48,5 @@ The render fix remains independent of the compilation-status UI planned separate
 - Browser reproduction with **PDF.js 5.7.284 and Chromium 156.0.8078.4**: the original viewer reproduces the corruption and concurrent-canvas error; the fixed viewer cancels the obsolete task, produces no browser error, and matches the uninterrupted baseline pixel for pixel.
 
 The screenshot harness runs the viewer in Chromium. It is separate from a full interactive VS Code session.
+
+This work was developed in collaboration with Codex.
